@@ -1,36 +1,27 @@
-package com.example.demo.service;
+package com.example.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.model.User;
+import com.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepository;
-
 @Service
-public class UserServiceImpl implements UserService {
+public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Override
-    public User saveUser(User user) {
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public User register(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("email already exists");
+        }
         return userRepository.save(user);
     }
 
-    @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
