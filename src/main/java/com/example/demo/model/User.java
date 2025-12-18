@@ -1,16 +1,38 @@
-package com.example.demo.service;
+package com.example.model;
 
-import java.util.List;
+import jakarta.persistence.*;
 
-import com.example.demo.entity.User;
+@Entity
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+public class User {
 
-public interface UserService {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    User saveUser(User user);
+    private String name;
 
-    User getUserById(Long id);
+    @Column(nullable = false, unique = true)
+    private String email;
 
-    List<User> getAllUsers();
+    @Column(nullable = false)
+    private String password;
 
-    void deleteUser(Long id);
+    @Column(nullable = false)
+    private String role = "USER";
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }
