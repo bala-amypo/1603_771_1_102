@@ -1,7 +1,6 @@
-package com.example.service;
+package com.example.demo.service;
 
-import com.example.model.User;
-import com.example.repository.UserRepository;
+import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,17 +10,5 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    public User register(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("email already exists");
-        }
-        return userRepository.save(user);
-    }
-
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
