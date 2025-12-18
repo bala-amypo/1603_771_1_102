@@ -1,18 +1,16 @@
-@Entity
-@Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+package com.example.demo.service;
 
-    private String name;
+import java.util.List;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+import com.example.demo.entity.User;
 
-    private String password; // Should be stored as a hash
+public interface UserService {
 
-    private String role = "USER"; // Default role
+    User saveUser(User user);
 
-    // Standard Getters and Setters
+    User getUserById(Long id);
+
+    List<User> getAllUsers();
+
+    void deleteUser(Long id);
 }
