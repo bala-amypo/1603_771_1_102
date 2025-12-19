@@ -1,6 +1,8 @@
 // src/main/java/com/example/demo/entity/User.java
 package com.example.demo.entity;
 
+import com.example.demo.entity.Warranty;
+
 import jakarta.persistence.*;
 import java.util.List;
 
