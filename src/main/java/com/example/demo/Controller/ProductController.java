@@ -15,13 +15,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // POST /products → Add a product
     @PostMapping
     public Product addProduct(@RequestBody Product product) {
-        return productService.saveProduct(product);
+        return productService.addProduct(product);
     }
 
-    // GET /products → List all products
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
