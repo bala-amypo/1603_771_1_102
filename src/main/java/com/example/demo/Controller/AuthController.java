@@ -1,54 +1,36 @@
 // src/main/java/com/example/demo/controller/AuthController.java
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
-import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Auth")
 public class AuthController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthController(UserService userService,
-                          PasswordEncoder passwordEncoder,
-                          JwtTokenProvider jwtTokenProvider) {
+    public AuthController(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    // Register a new user
     @PostMapping("/register")
-    @Operation(summary = "Register a new user")
-    public User register(@RequestBody RegisterRequest req) {
-        User user = User.builder()
-            .name(req.getName())
-            .email(req.getEmail())
-            .password(req.getPassword())
-            .role(req.getRole())
-            .build();
+    public User register(@RequestBody User user) {
         return userService.register(user);
     }
 
+    // Login by checking email + password (no JWT, no DTO)
     @PostMapping("/login")
-    @Operation(summary = "Login and get JWT")
-    public AuthResponse login(@RequestBody AuthRequest req) {
-        User user = userService.findByEmail(req.getEmail());
-        if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid credentials");
+    public String login(@RequestBody User loginUser) {
+        User user = userService.findByEmail(loginUser.getEmail());
+
+        if (!user.getPassword().equals(loginUser.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
         }
-        String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail(), user.getRole());
-        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
+
+        // For now, just return a simple success message
+        return "Login successful for user: " + user.getEmail();
     }
 }
