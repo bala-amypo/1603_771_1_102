@@ -1,42 +1,11 @@
-package com.example.demo.entity;
+package com.example.demo.repository;
 
-import jakarta.persistence.*;
+import com.example.demo.entity.AlertSchedule;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Entity
-@Table(name = "alert_schedules")
-public class AlertSchedule {
+import java.util.List;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public interface AlertScheduleRepository extends JpaRepository<AlertSchedule, Long> {
 
-    @ManyToOne
-    private Warranty warranty;
-
-    private Integer daysBeforeExpiry;
-    private Boolean enabled;
-
-    public AlertSchedule() {}
-
-    public AlertSchedule(Long id, Warranty warranty,
-                         Integer daysBeforeExpiry, Boolean enabled) {
-        this.id = id;
-        this.warranty = warranty;
-        this.daysBeforeExpiry = daysBeforeExpiry;
-        this.enabled = enabled;
-    }
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Warranty getWarranty() { return warranty; }
-    public void setWarranty(Warranty warranty) { this.warranty = warranty; }
-
-    public Integer getDaysBeforeExpiry() { return daysBeforeExpiry; }
-    public void setDaysBeforeExpiry(Integer daysBeforeExpiry) {
-        this.daysBeforeExpiry = daysBeforeExpiry;
-    }
-
-    public Boolean getEnabled() { return enabled; }
-    public void setEnabled(Boolean enabled) { this.enabled = enabled; }
+    List<AlertSchedule> findByWarrantyId(Long warrantyId);
 }
