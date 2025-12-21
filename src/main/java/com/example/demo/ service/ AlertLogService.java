@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface AlertLogService {
 
-    AlertLog save(AlertLog alertLog);
+    AlertLog addLog(Long warrantyId, String message);
 
-    List<AlertLog> getAll();
+    List<AlertLog> getLogs(Long warrantyId);
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "alert_logs")
 public class AlertLog {
 
     @Id
@@ -11,39 +12,28 @@ public class AlertLog {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "warranty_id")
     private Warranty warranty;
 
     private LocalDateTime sentAt;
+
     private String message;
 
     @PrePersist
     public void onCreate() {
-        sentAt = LocalDateTime.now();
+        this.sentAt = LocalDateTime.now();
     }
 
-    public AlertLog() {}
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public Warranty getWarranty() { return warranty; }
+    public void setWarranty(Warranty warranty) { this.warranty = warranty; }
 
-    public Warranty getWarranty() {
-        return warranty;
-    }
+    public LocalDateTime getSentAt() { return sentAt; }
+    public void setSentAt(LocalDateTime sentAt) { this.sentAt = sentAt; }
 
-    public LocalDateTime getSentAt() {
-        return sentAt;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setWarranty(Warranty warranty) {
-        this.warranty = warranty;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
 }
