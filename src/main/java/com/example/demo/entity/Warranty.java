@@ -1,44 +1,39 @@
 package com.example.demo.entity;
-import com.example.demo.entity.Product;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "warranties")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Warranty {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User user;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Product product;
 
     private LocalDate purchaseDate;
     private LocalDate expiryDate;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String serialNumber;
 
-    // Getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @OneToMany(mappedBy = "warranty")
+    private List<AlertSchedule> schedules;
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
-    public Product getProduct() { return product; }
-    public void setProduct(Product product) { this.product = product; }
-
-    public LocalDate getPurchaseDate() { return purchaseDate; }
-    public void setPurchaseDate(LocalDate purchaseDate) { this.purchaseDate = purchaseDate; }
-
-    public LocalDate getExpiryDate() { return expiryDate; }
-    public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
-
-    public String getSerialNumber() { return serialNumber; }
-    public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
+    @OneToMany(mappedBy = "warranty")
+    private List<AlertLog> logs;
 }
