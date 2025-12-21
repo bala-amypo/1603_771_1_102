@@ -2,7 +2,6 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.AlertLog;
 import com.example.demo.repository.AlertLogRepository;
-import com.example.demo.repository.WarrantyRepository;
 import com.example.demo.service.AlertLogService;
 import org.springframework.stereotype.Service;
 
@@ -11,24 +10,22 @@ import java.util.List;
 @Service
 public class AlertLogServiceImpl implements AlertLogService {
 
-    private final AlertLogRepository repo;
-    private final WarrantyRepository warrantyRepo;
+    private final AlertLogRepository repository;
 
-    public AlertLogServiceImpl(AlertLogRepository repo,
-                               WarrantyRepository warrantyRepo) {
-        this.repo = repo;
-        this.warrantyRepo = warrantyRepo;
+    public AlertLogServiceImpl(AlertLogRepository repository) {
+        this.repository = repository;
     }
 
-    public AlertLog addLog(Long warrantyId, String message) {
-        AlertLog log = AlertLog.builder()
-                .warranty(warrantyRepo.findById(warrantyId).orElseThrow())
-                .message(message)
-                .build();
-        return repo.save(log);
+    @Override
+    public AlertLog save(AlertLog alertLog) {
+        AlertLog log = new AlertLog();
+        log.setMessage(alertLog.getMessage());
+        log.setStatus(alertLog.getStatus());
+        return repository.save(log);
     }
 
-    public List<AlertLog> getLogs(Long warrantyId) {
-        return repo.findByWarrantyId(warrantyId);
+    @Override
+    public List<AlertLog> getAll() {
+        return repository.findAll();
     }
 }
