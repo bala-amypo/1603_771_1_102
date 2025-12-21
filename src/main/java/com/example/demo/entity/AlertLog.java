@@ -22,7 +22,6 @@ public class AlertLog {
     private Warranty warranty;
 
     private LocalDateTime sentAt;
-
     private String message;
 
     @PrePersist

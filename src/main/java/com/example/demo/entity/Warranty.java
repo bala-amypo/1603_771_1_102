@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "warranties")
@@ -30,10 +29,4 @@ public class Warranty {
 
     @Column(unique = true)
     private String serialNumber;
-
-    @OneToMany(mappedBy = "warranty")
-    private List<AlertSchedule> schedules;
-
-    @OneToMany(mappedBy = "warranty")
-    private List<AlertLog> logs;
 }
