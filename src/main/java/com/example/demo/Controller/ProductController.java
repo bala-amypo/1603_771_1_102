@@ -1,19 +1,20 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.entity.Product;
+import com.example.demo.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.model.Product;
-import com.example.demo.service.ProductService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @PostMapping
     public Product addProduct(@RequestBody Product product) {
