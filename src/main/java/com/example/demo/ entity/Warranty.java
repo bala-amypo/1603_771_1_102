@@ -4,26 +4,34 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "warranties")
 public class Warranty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(nullable = false)
     private LocalDate purchaseDate;
+
+    @Column(nullable = false)
     private LocalDate expiryDate;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String serialNumber;
 
-    public Warranty() {}
+    public Warranty() {
+    }
 
+    // getters
     public Long getId() {
         return id;
     }
@@ -48,6 +56,7 @@ public class Warranty {
         return serialNumber;
     }
 
+    // setters
     public void setId(Long id) {
         this.id = id;
     }
