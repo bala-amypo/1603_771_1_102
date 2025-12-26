@@ -1,24 +1,34 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ProductDTO;
 import com.example.demo.entity.Product;
-import com.example.demo.service.ProductService;
+import com.example.demo.service.impl.ProductServiceImpl;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductServiceImpl productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductServiceImpl productService) {
         this.productService = productService;
     }
 
     @PostMapping
-    public Product addProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
+    public Product addProduct(@Valid @RequestBody ProductDTO dto) {
+        Product p = new Product();
+        p.setName(dto.getName());
+        p.setBrand(dto.getBrand());
+        p.setModelNumber(dto.getModelNumber());
+        p.setCategory(dto.getCategory());
+
+        return productService.addProduct(p);
     }
 
     @GetMapping

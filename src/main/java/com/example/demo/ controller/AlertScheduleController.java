@@ -1,35 +1,38 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.AlertScheduleDTO;
 import com.example.demo.entity.AlertSchedule;
-import com.example.demo.service.AlertScheduleService;
+import com.example.demo.service.impl.AlertScheduleServiceImpl;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/alert-schedules")
+@RequestMapping("/api/alerts/schedules")
 public class AlertScheduleController {
 
-    private final AlertScheduleService alertScheduleService;
+    private final AlertScheduleServiceImpl scheduleService;
 
-    public AlertScheduleController(AlertScheduleService alertScheduleService) {
-        this.alertScheduleService = alertScheduleService;
+    public AlertScheduleController(AlertScheduleServiceImpl scheduleService) {
+        this.scheduleService = scheduleService;
     }
 
-    // POST /alert-schedules/{warrantyId}
-    @PostMapping("/{warrantyId}")
-    public AlertSchedule createSchedule(
-            @PathVariable Long warrantyId,
-            @RequestBody AlertSchedule schedule) {
+    @PostMapping("/warranty/{warrantyId}")
+    public AlertSchedule createSchedule(@PathVariable Long warrantyId,
+                                        @Valid @RequestBody AlertScheduleDTO dto) {
 
-        return alertScheduleService.createSchedule(warrantyId, schedule);
+        AlertSchedule s = new AlertSchedule();
+        s.setDaysBeforeExpiry(dto.getDaysBeforeExpiry());
+        s.setEnabled(dto.isEnabled());
+
+        return scheduleService.createSchedule(warrantyId, s);
     }
 
-    // GET /alert-schedules/{warrantyId}
-    @GetMapping("/{warrantyId}")
-    public List<AlertSchedule> getSchedules(
-            @PathVariable Long warrantyId) {
-
-        return alertScheduleService.getSchedules(warrantyId);
+    @GetMapping("/warranty/{warrantyId}")
+    public List<AlertSchedule> getSchedules(@PathVariable Long warrantyId) {
+        return scheduleService.getSchedules(warrantyId);
     }
 }

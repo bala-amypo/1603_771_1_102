@@ -1,28 +1,41 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.WarrantyDTO;
 import com.example.demo.entity.Warranty;
-import com.example.demo.service.WarrantyService;
+import com.example.demo.service.impl.WarrantyServiceImpl;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/warranties")
+@RequestMapping("/api/warranties")
 public class WarrantyController {
 
-    private final WarrantyService warrantyService;
+    private final WarrantyServiceImpl warrantyService;
 
-    public WarrantyController(WarrantyService warrantyService) {
+    public WarrantyController(WarrantyServiceImpl warrantyService) {
         this.warrantyService = warrantyService;
     }
 
-    @PostMapping("/{userId}/{productId}")
-    public Warranty registerWarranty(
-            @PathVariable Long userId,
-            @PathVariable Long productId,
-            @RequestBody Warranty warranty) {
+    @PostMapping("/user/{userId}/product/{productId}")
+    public Warranty registerWarranty(@PathVariable Long userId,
+                                     @PathVariable Long productId,
+                                     @Valid @RequestBody WarrantyDTO dto) {
 
-        return warrantyService.registerWarranty(userId, productId, warranty);
+        Warranty w = new Warranty();
+        w.setPurchaseDate(dto.getPurchaseDate());
+        w.setExpiryDate(dto.getExpiryDate());
+        w.setSerialNumber(dto.getSerialNumber());
+
+        return warrantyService.registerWarranty(userId, productId, w);
+    }
+
+    @GetMapping("/{id}")
+    public Warranty getWarranty(@PathVariable Long id) {
+        return warrantyService.getWarranty(id);
     }
 
     @GetMapping("/user/{userId}")
