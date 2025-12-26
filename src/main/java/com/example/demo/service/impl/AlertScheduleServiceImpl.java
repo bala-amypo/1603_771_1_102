@@ -2,16 +2,14 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.AlertSchedule;
 import com.example.demo.entity.Warranty;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.AlertScheduleRepository;
 import com.example.demo.repository.WarrantyRepository;
-import com.example.demo.service.AlertScheduleService;
-
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class AlertScheduleServiceImpl implements AlertScheduleService {
+public class AlertScheduleServiceImpl {
 
     private final AlertScheduleRepository scheduleRepository;
     private final WarrantyRepository warrantyRepository;
@@ -22,28 +20,28 @@ public class AlertScheduleServiceImpl implements AlertScheduleService {
         this.warrantyRepository = warrantyRepository;
     }
 
-    @Override
     public AlertSchedule createSchedule(Long warrantyId,
                                         AlertSchedule schedule) {
 
         if (schedule.getDaysBeforeExpiry() < 0) {
-            throw new IllegalArgumentException(
-                    "daysBeforeExpiry must be >= 0");
+            throw new ValidationException(
+                    "daysBeforeExpiry cannot be negative");
         }
 
         Warranty warranty = warrantyRepository.findById(warrantyId)
                 .orElseThrow(() ->
-                        new RuntimeException("Warranty not found"));
+                        new ResourceNotFoundException("Warranty not found"));
 
         schedule.setWarranty(warranty);
         return scheduleRepository.save(schedule);
     }
 
-    @Override
     public List<AlertSchedule> getSchedules(Long warrantyId) {
+
         warrantyRepository.findById(warrantyId)
                 .orElseThrow(() ->
-                        new RuntimeException("Warranty not found"));
+                        new ResourceNotFoundException("Warranty not found"));
+
         return scheduleRepository.findByWarrantyId(warrantyId);
     }
 }
