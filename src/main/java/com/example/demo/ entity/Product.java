@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -16,43 +17,26 @@ public class Product {
 
     public Product() {}
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public String getModelNumber() {
-        return modelNumber;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setId(Long id) {
+    public Product(Long id, String name, String brand, String modelNumber, String category) {
         this.id = id;
-    }
-
-    public void setName(String name) {
         this.name = name;
-    }
-
-    public void setBrand(String brand) {
         this.brand = brand;
-    }
-
-    public void setModelNumber(String modelNumber) {
         this.modelNumber = modelNumber;
-    }
-
-    public void setCategory(String category) {
         this.category = category;
     }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getBrand() { return brand; }
+    public void setBrand(String brand) { this.brand = brand; }
+
+    public String getModelNumber() { return modelNumber; }
+    public void setModelNumber(String modelNumber) { this.modelNumber = modelNumber; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 }

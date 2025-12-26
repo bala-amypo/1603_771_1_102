@@ -11,73 +11,37 @@ public class Warranty {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    @Column(nullable = false)
-    private LocalDate purchaseDate;
-
-    @Column(nullable = false)
-    private LocalDate expiryDate;
-
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String serialNumber;
 
-    public Warranty() {
-    }
+    private LocalDate purchaseDate;
+    private LocalDate expiryDate;
 
-    // getters
-    public Long getId() {
-        return id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public User getUser() {
-        return user;
-    }
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    public Product getProduct() {
-        return product;
-    }
+    public Warranty() {}
 
-    public LocalDate getPurchaseDate() {
-        return purchaseDate;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public LocalDate getExpiryDate() {
-        return expiryDate;
-    }
+    public String getSerialNumber() { return serialNumber; }
+    public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
 
-    public String getSerialNumber() {
-        return serialNumber;
-    }
+    public LocalDate getPurchaseDate() { return purchaseDate; }
+    public void setPurchaseDate(LocalDate purchaseDate) { this.purchaseDate = purchaseDate; }
 
-    // setters
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public LocalDate getExpiryDate() { return expiryDate; }
+    public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public void setPurchaseDate(LocalDate purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
-
-    public void setExpiryDate(LocalDate expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
+    public Product getProduct() { return product; }
+    public void setProduct(Product product) { this.product = product; }
 }
