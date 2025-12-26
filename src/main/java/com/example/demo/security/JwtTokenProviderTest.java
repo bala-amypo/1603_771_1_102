@@ -1,30 +1,49 @@
 package com.example.demo.security;
 
 import com.example.demo.config.JwtProperties;
-import org.junit.jupiter.api.Test;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 
-import java.lang.reflect.Field;
+import java.security.Key;
+import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+public class JwtTokenProvider {
 
-class JwtTokenProviderTest {
+    private final Key key;
+    private final JwtProperties jwtProperties;
 
-    @Test
-    void createAndValidateToken() throws Exception {
-        JwtProperties props = new JwtProperties();
+    public JwtTokenProvider(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
+        this.key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
+    }
 
-        Field secret = JwtProperties.class.getDeclaredField("secret");
-        secret.setAccessible(true);
-        secret.set(props, "12345678901234567890123456789012");
+    public String createToken(Long userId, String email, String role) {
+        return Jwts.builder()
+                .claim("userId", userId)
+                .claim("email", email)
+                .claim("role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(
+                        new Date(System.currentTimeMillis() +
+                                jwtProperties.getExpirationMs())
+                )
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
 
-        Field exp = JwtProperties.class.getDeclaredField("expirationMs");
-        exp.setAccessible(true);
-        exp.set(props, 3600000L);
+    public boolean validateToken(String token) {
+        try {
+            getClaims(token);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
 
-        JwtTokenProvider provider = new JwtTokenProvider(props);
-
-        String token = provider.createToken(1L,"a@b.com","USER");
-
-        assertTrue(provider.validateToken(token));
+    public Jws<Claims> getClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token);
     }
 }
