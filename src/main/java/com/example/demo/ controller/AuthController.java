@@ -22,7 +22,6 @@ public class AuthController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    // POST /auth/register
     @PostMapping("/register")
     public User register(@RequestBody RegisterRequest request) {
 
@@ -35,7 +34,6 @@ public class AuthController {
         return userService.register(user);
     }
 
-    // POST /auth/login
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
 
@@ -51,7 +49,6 @@ public class AuthController {
                 user.getRole()
         );
 
-        // ✔ AuthResponse takes ONLY ONE ARG
         return new AuthResponse(token);
     }
 }
