@@ -1,43 +1,40 @@
 package com.example.demo.security;
 
-import com.example.demo.config.JwtProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import com.example.demo.config.JwtProperties;
 
 import java.security.Key;
 import java.util.Date;
 
 public class JwtTokenProvider {
 
+    private final JwtProperties props;
     private final Key key;
-    private final JwtProperties jwtProperties;
 
-    public JwtTokenProvider(JwtProperties jwtProperties) {
-        this.jwtProperties = jwtProperties;
-        this.key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
+    public JwtTokenProvider(JwtProperties props) {
+        this.props = props;
+        this.key = Keys.hmacShaKeyFor(props.getSecret().getBytes());
     }
 
     public String createToken(Long userId, String email, String role) {
+
         return Jwts.builder()
-                .claim("userId", userId)
+                .claim("userId", userId.intValue())
                 .claim("email", email)
                 .claim("role", role)
-                .setIssuedAt(new Date())
                 .setExpiration(
-                        new Date(System.currentTimeMillis() +
-                                jwtProperties.getExpirationMs())
-                )
+                        new Date(System.currentTimeMillis() + props.getExpirationMs()))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public boolean validateToken(String token) {
-        try {
-            getClaims(token);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
+        Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token);
+        return true;
     }
 
     public Jws<Claims> getClaims(String token) {
