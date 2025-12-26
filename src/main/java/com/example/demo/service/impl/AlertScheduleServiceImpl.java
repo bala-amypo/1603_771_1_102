@@ -1,47 +1,31 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.AlertSchedule;
-import com.example.demo.entity.Warranty;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.exception.ValidationException;
-import com.example.demo.repository.AlertScheduleRepository;
-import com.example.demo.repository.WarrantyRepository;
-
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
+import com.example.demo.service.AlertScheduleService;
 import java.util.List;
 
-public class AlertScheduleServiceImpl {
+public class AlertScheduleServiceImpl implements AlertScheduleService {
 
-    private final AlertScheduleRepository scheduleRepository;
-    private final WarrantyRepository warrantyRepository;
+    private final AlertScheduleRepository repo;
+    private final WarrantyRepository warrantyRepo;
 
-    public AlertScheduleServiceImpl(AlertScheduleRepository scheduleRepository,
-                                    WarrantyRepository warrantyRepository) {
-        this.scheduleRepository = scheduleRepository;
-        this.warrantyRepository = warrantyRepository;
+    public AlertScheduleServiceImpl(AlertScheduleRepository r, WarrantyRepository w) {
+        this.repo = r;
+        this.warrantyRepo = w;
     }
 
-    public AlertSchedule createSchedule(Long warrantyId,
-                                        AlertSchedule schedule) {
+    public AlertSchedule createSchedule(Long warrantyId, AlertSchedule s) {
+        if (s.getDaysBeforeExpiry() < 0)
+            throw new IllegalArgumentException("daysBeforeExpiry");
 
-        if (schedule.getDaysBeforeExpiry() < 0) {
-            throw new ValidationException(
-                    "daysBeforeExpiry cannot be negative");
-        }
-
-        Warranty warranty = warrantyRepository.findById(warrantyId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Warranty not found"));
-
-        schedule.setWarranty(warranty);
-        return scheduleRepository.save(schedule);
+        Warranty w = warrantyRepo.findById(warrantyId).orElseThrow(RuntimeException::new);
+        s.setWarranty(w);
+        return repo.save(s);
     }
 
     public List<AlertSchedule> getSchedules(Long warrantyId) {
-
-        warrantyRepository.findById(warrantyId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Warranty not found"));
-
-        return scheduleRepository.findByWarrantyId(warrantyId);
+        warrantyRepo.findById(warrantyId).orElseThrow(RuntimeException::new);
+        return repo.findByWarrantyId(warrantyId);
     }
 }

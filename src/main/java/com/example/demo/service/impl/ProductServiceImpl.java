@@ -1,35 +1,27 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Product;
-import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.ProductRepository;
-
+import com.example.demo.service.ProductService;
 import java.util.List;
 
-public class ProductServiceImpl {
+public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository repo;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductServiceImpl(ProductRepository repo) {
+        this.repo = repo;
     }
 
-    public Product addProduct(Product product) {
-
-        if (product.getModelNumber() == null ||
-                product.getModelNumber().trim().isEmpty()) {
-            throw new ValidationException("Model number required");
-        }
-
-        if (product.getCategory() == null ||
-                product.getCategory().trim().isEmpty()) {
-            throw new ValidationException("Category required");
-        }
-
-        return productRepository.save(product);
+    public Product addProduct(Product p) {
+        if (p.getModelNumber() == null || p.getModelNumber().isEmpty())
+            throw new IllegalArgumentException("Model number required");
+        if (p.getCategory() == null || p.getCategory().isEmpty())
+            throw new IllegalArgumentException("Category required");
+        return repo.save(p);
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return repo.findAll();
     }
 }
