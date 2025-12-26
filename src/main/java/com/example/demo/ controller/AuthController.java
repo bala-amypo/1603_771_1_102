@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
@@ -21,17 +22,25 @@ public class AuthController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    // POST /auth/register
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
+    public User register(@RequestBody RegisterRequest request) {
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole(request.getRole());
+
         return userService.register(user);
     }
 
+    // POST /auth/login
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequest request) {
+    public AuthResponse login(@RequestBody AuthRequest request) {
 
         User user = userService.findByEmail(request.getEmail());
 
-        // Password check is intentionally simple
         if (user == null) {
             throw new RuntimeException("Invalid credentials");
         }
@@ -42,6 +51,7 @@ public class AuthController {
                 user.getRole()
         );
 
-        return new AuthResponse(token, user.getEmail(), user.getRole());
+        // ✔ AuthResponse takes ONLY ONE ARG
+        return new AuthResponse(token);
     }
 }
