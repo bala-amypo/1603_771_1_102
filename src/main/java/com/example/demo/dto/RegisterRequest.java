@@ -1,11 +1,21 @@
 package com.example.demo.dto;
 
-public class AuthRequest {
+public class RegisterRequest {
 
+    private String name;
     private String email;
     private String password;
+    private String role;
 
-    public AuthRequest() {
+    public RegisterRequest() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -19,8 +29,16 @@ public class AuthRequest {
     public String getPassword() {
         return password;
     }
-
+    
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
