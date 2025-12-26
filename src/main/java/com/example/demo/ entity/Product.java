@@ -1,18 +1,25 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
-@Table(name = "products")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Product name is required")
     private String name;
+
+    @NotBlank(message = "Brand is required")
     private String brand;
+
+    @NotBlank(message = "Model number is required")
     private String modelNumber;
+
+    @NotBlank(message = "Category is required")
     private String category;
 
     public Product() {}
@@ -25,6 +32,7 @@ public class Product {
         this.category = category;
     }
 
+    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
