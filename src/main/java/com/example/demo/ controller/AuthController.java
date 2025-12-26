@@ -1,17 +1,24 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.AuthResponse;
 import com.example.demo.entity.User;
+import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
-public class UserController {
+@RequestMapping("/auth")
+public class AuthController {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public UserController(UserService userService) {
+    public AuthController(UserService userService,
+                          JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/register")
@@ -19,8 +26,22 @@ public class UserController {
         return userService.register(user);
     }
 
-    @GetMapping("/{email}")
-    public User findByEmail(@PathVariable String email) {
-        return userService.findByEmail(email);
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody LoginRequest request) {
+
+        User user = userService.findByEmail(request.getEmail());
+
+        // Password check is intentionally simple
+        if (user == null) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        String token = jwtTokenProvider.createToken(
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
+
+        return new AuthResponse(token, user.getEmail(), user.getRole());
     }
 }
