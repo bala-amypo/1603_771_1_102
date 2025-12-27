@@ -7,9 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "warranties")
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -20,11 +18,9 @@ public class Warranty {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
     private Product product;
 
     private LocalDate purchaseDate;
@@ -33,9 +29,9 @@ public class Warranty {
     @Column(unique = true)
     private String serialNumber;
 
-    @OneToMany(mappedBy = "warranty", cascade = CascadeType.ALL)
-    private List<AlertSchedule> alertSchedules;
+    @OneToMany(mappedBy = "warranty")
+    private List<AlertSchedule> schedules;
 
-    @OneToMany(mappedBy = "warranty", cascade = CascadeType.ALL)
-    private List<AlertLog> alertLogs;
+    @OneToMany(mappedBy = "warranty")
+    private List<AlertLog> logs;
 }
