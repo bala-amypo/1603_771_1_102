@@ -3,10 +3,13 @@ package com.example.demo.security;
 import com.example.demo.config.JwtProperties;
 import io.jsonwebtoken.*;
 
+import org.springframework.stereotype.Component;
+
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
 
+@Component
 public class JwtTokenProvider {
 
     private final JwtProperties props;
