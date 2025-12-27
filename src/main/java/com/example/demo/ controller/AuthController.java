@@ -30,12 +30,11 @@ public class AuthController {
     @PostMapping("/register")
     public User register(@RequestBody RegisterRequest req) {
 
-        User user = User.builder()
-                .name(req.getName())
-                .email(req.getEmail())
-                .password(req.getPassword())
-                .role(req.getRole())
-                .build();
+        User user = new User();
+        user.setName(req.getName());
+        user.setEmail(req.getEmail());
+        user.setPassword(req.getPassword());
+        user.setRole(req.getRole());
 
         return userService.register(user);
     }
