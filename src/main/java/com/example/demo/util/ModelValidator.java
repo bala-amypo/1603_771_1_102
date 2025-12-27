@@ -5,10 +5,7 @@ import com.example.demo.exception.BadRequestException;
 public class ModelValidator {
 
     private ModelValidator() {
-        // Utility class – prevent object creation
     }
-
-    /* ================= USER VALIDATION ================= */
 
     public static void validateUser(String name, String email, String password) {
 
@@ -25,8 +22,6 @@ public class ModelValidator {
         }
     }
 
-    /* ================= PRODUCT VALIDATION ================= */
-
     public static void validateProduct(String name, Double price) {
 
         if (name == null || name.trim().isEmpty()) {
@@ -38,10 +33,10 @@ public class ModelValidator {
         }
     }
 
-    /* ================= WARRANTY VALIDATION ================= */
+    public static void validateMessage(String message) {
 
-    public static void validateWarranty(Object startDate, Object endDate) {
-
-        if (startDate == null) {
-            throw new BadRequestException("Warranty start date is required");
+        if (message == null || message.trim().isEmpty()) {
+            throw new BadRequestException("Message cannot be empty");
         }
+    }
+}
