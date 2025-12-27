@@ -3,14 +3,14 @@ package com.example.demo.security;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-public class JwtAuthenticationEntryPoint
-        implements AuthenticationEntryPoint {
+@Component
+public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request,
@@ -18,7 +18,9 @@ public class JwtAuthenticationEntryPoint
                          AuthenticationException authException)
             throws IOException, ServletException {
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("Unauthorized");
+        response.sendError(
+                HttpServletResponse.SC_UNAUTHORIZED,
+                "Unauthorized: Invalid or missing JWT token"
+        );
     }
 }

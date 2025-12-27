@@ -1,48 +1,25 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.stereotype.Component;
+import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import static org.junit.jupiter.api.Assertions.*;
 
-@Component
-public class JwtTokenProvider {
+public class JwtTokenProviderTest {
 
-    private final String SECRET_KEY = "secret123";
-    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 1 day
+    private final JwtTokenProvider jwtTokenProvider =
+            new JwtTokenProvider();
 
-    public String createToken(Long userId, String email, String role) {
-        Claims claims = Jwts.claims().setSubject(email);
-        claims.put("userId", userId);
-        claims.put("role", role);
+    @Test
+    void testCreateAndValidateToken() {
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
-    }
+        String token = jwtTokenProvider.createToken(
+                1L,
+                "test@gmail.com",
+                "USER"
+        );
 
-    public String getEmail(String token) {
-        return getClaims(token).getSubject();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            getClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody();
+        assertNotNull(token);
+        assertTrue(jwtTokenProvider.validateToken(token));
+        assertEquals("test@gmail.com", jwtTokenProvider.getEmail(token));
     }
 }
