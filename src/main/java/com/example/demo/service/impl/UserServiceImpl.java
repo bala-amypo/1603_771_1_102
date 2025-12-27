@@ -6,7 +6,9 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -18,17 +20,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) {
-
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("email already exists");
         }
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         if (user.getRole() == null) {
             user.setRole("USER");
         }
-
         return userRepository.save(user);
     }
 

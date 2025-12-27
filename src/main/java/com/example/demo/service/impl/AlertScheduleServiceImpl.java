@@ -6,9 +6,11 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AlertScheduleRepository;
 import com.example.demo.repository.WarrantyRepository;
 import com.example.demo.service.AlertScheduleService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class AlertScheduleServiceImpl implements AlertScheduleService {
 
     private final AlertScheduleRepository alertScheduleRepository;
@@ -36,10 +38,8 @@ public class AlertScheduleServiceImpl implements AlertScheduleService {
 
     @Override
     public List<AlertSchedule> getSchedules(Long warrantyId) {
-
         warrantyRepository.findById(warrantyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Warranty not found"));
-
         return alertScheduleRepository.findByWarrantyId(warrantyId);
     }
 }
