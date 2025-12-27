@@ -1,38 +1,34 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AlertScheduleDTO;
 import com.example.demo.entity.AlertSchedule;
-import com.example.demo.service.impl.AlertScheduleServiceImpl;
-
-import jakarta.validation.Valid;
-
+import com.example.demo.service.AlertScheduleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/alerts/schedules")
+@RequestMapping("/schedules")
+@Tag(name = "Alert Schedules")
 public class AlertScheduleController {
 
-    private final AlertScheduleServiceImpl scheduleService;
+    private final AlertScheduleService alertScheduleService;
 
-    public AlertScheduleController(AlertScheduleServiceImpl scheduleService) {
-        this.scheduleService = scheduleService;
+    public AlertScheduleController(AlertScheduleService alertScheduleService) {
+        this.alertScheduleService = alertScheduleService;
     }
 
-    @PostMapping("/warranty/{warrantyId}")
+    @PostMapping("/{warrantyId}")
+    @Operation(summary = "Create alert schedule")
     public AlertSchedule createSchedule(@PathVariable Long warrantyId,
-                                        @Valid @RequestBody AlertScheduleDTO dto) {
-
-        AlertSchedule s = new AlertSchedule();
-        s.setDaysBeforeExpiry(dto.getDaysBeforeExpiry());
-        s.setEnabled(dto.isEnabled());
-
-        return scheduleService.createSchedule(warrantyId, s);
+                                        @RequestBody AlertSchedule schedule) {
+        return alertScheduleService.createSchedule(warrantyId, schedule);
     }
 
-    @GetMapping("/warranty/{warrantyId}")
+    @GetMapping("/{warrantyId}")
+    @Operation(summary = "Get alert schedules")
     public List<AlertSchedule> getSchedules(@PathVariable Long warrantyId) {
-        return scheduleService.getSchedules(warrantyId);
+        return alertScheduleService.getSchedules(warrantyId);
     }
 }

@@ -1,41 +1,33 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "alert_logs")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class AlertLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Message is required")
-    private String message;
+    @ManyToOne
+    @JoinColumn(name = "warranty_id")
+    private Warranty warranty;
 
     private LocalDateTime sentAt;
 
-    @ManyToOne
-    @JoinColumn(name = "warranty_id", nullable = false)
-    private Warranty warranty;
-
-    public AlertLog() {}
+    private String message;
 
     @PrePersist
     public void prePersist() {
-        sentAt = LocalDateTime.now();
+        this.sentAt = LocalDateTime.now();
     }
-
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
-
-    public LocalDateTime getSentAt() { return sentAt; }
-
-    public Warranty getWarranty() { return warranty; }
-    public void setWarranty(Warranty warranty) { this.warranty = warranty; }
 }
