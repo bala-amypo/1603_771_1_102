@@ -1,34 +1,47 @@
 package com.example.demo.util;
 
-import com.example.demo.entity.Product;
-import com.example.demo.entity.Warranty;
+import com.example.demo.exception.BadRequestException;
 
 public class ModelValidator {
 
-    private ModelValidator() {}
+    private ModelValidator() {
+        // Utility class – prevent object creation
+    }
 
-    public static void validateProduct(Product product) {
-        if (product.getModelNumber() == null ||
-            product.getModelNumber().trim().isEmpty()) {
-            throw new IllegalArgumentException("Model number required");
+    /* ================= USER VALIDATION ================= */
+
+    public static void validateUser(String name, String email, String password) {
+
+        if (name == null || name.trim().isEmpty()) {
+            throw new BadRequestException("User name is required");
         }
 
-        if (product.getCategory() == null ||
-            product.getCategory().trim().isEmpty()) {
-            throw new IllegalArgumentException("Category required");
+        if (email == null || email.trim().isEmpty()) {
+            throw new BadRequestException("Email is required");
+        }
+
+        if (password == null || password.trim().isEmpty()) {
+            throw new BadRequestException("Password is required");
         }
     }
 
-    public static void validateWarranty(Warranty warranty) {
-        if (warranty.getPurchaseDate() == null ||
-            warranty.getExpiryDate() == null) {
-            throw new IllegalArgumentException("Dates required");
+    /* ================= PRODUCT VALIDATION ================= */
+
+    public static void validateProduct(String name, Double price) {
+
+        if (name == null || name.trim().isEmpty()) {
+            throw new BadRequestException("Product name is required");
         }
 
-        if (!warranty.getExpiryDate()
-                .isAfter(warranty.getPurchaseDate())) {
-            throw new IllegalArgumentException(
-                    "Expiry date must be after purchase date");
+        if (price == null || price <= 0) {
+            throw new BadRequestException("Product price must be greater than zero");
         }
     }
-}
+
+    /* ================= WARRANTY VALIDATION ================= */
+
+    public static void validateWarranty(Object startDate, Object endDate) {
+
+        if (startDate == null) {
+            throw new BadRequestException("Warranty start date is required");
+        }
