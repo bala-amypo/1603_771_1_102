@@ -7,15 +7,7 @@ public class RegisterRequest {
     private String password;
     private String role;
 
-    public RegisterRequest() {
-    }
-
-    public RegisterRequest(String name, String email, String password, String role) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
+    public RegisterRequest() {}
 
     public String getName() {
         return name;
