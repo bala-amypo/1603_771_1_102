@@ -14,39 +14,42 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder encoder;
+    private final JwtTokenProvider tokenProvider;
 
-    public AuthController(UserService userService,
-                          PasswordEncoder passwordEncoder,
-                          JwtTokenProvider jwtTokenProvider) {
+    public AuthController(
+            UserService userService,
+            PasswordEncoder encoder,
+            JwtTokenProvider tokenProvider
+    ) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.encoder = encoder;
+        this.tokenProvider = tokenProvider;
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody RegisterRequest request) {
+    public User register(@RequestBody RegisterRequest req) {
 
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        user.setRole(request.getRole());
+        User user = User.builder()
+                .name(req.getName())
+                .email(req.getEmail())
+                .password(req.getPassword())
+                .role(req.getRole())
+                .build();
 
         return userService.register(user);
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest request) {
+    public AuthResponse login(@RequestBody AuthRequest req) {
 
-        User user = userService.findByEmail(request.getEmail());
+        User user = userService.findByEmail(req.getEmail());
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!encoder.matches(req.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
-        String token = jwtTokenProvider.createToken(
+        String token = tokenProvider.createToken(
                 user.getId(),
                 user.getEmail(),
                 user.getRole()

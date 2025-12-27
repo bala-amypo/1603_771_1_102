@@ -1,10 +1,10 @@
 package com.example.demo.security;
 
 import com.example.demo.repository.UserRepository;
-import org.springframework.security.core.userdetails.*;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-@Service
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -14,9 +14,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public CustomUserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
-
+    public UserDetails loadUserByUsername(String email) {
         return userRepository.findByEmail(email)
                 .map(CustomUserDetails::new)
                 .orElseThrow(() ->
