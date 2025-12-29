@@ -20,6 +20,9 @@ public class SwaggerConfig {
                 .bearerFormat("JWT");
 
         return new OpenAPI()
+                 .servers(List.of(
+                        new Server().url("https://9127.pro604cr.amypo.ai")
+                ))
                 .info(new Info()
                         .title("Digital Warranty Tracker API")
                         .version("1.0"))
